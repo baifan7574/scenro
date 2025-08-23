@@ -1,0 +1,21 @@
+{
+  "model": "realisticVisionV60B1_v51HyperVAE",
+  "lora": "",
+  "width": 512,
+  "height": 768,
+  "steps": 20,
+  "cfg_scale": 7,
+  "sampler_index": "DPM++ 2M",
+  "hires_fix": true,
+  "hires_upscaler": "Latent",
+  "hires_scale": 1.5,
+  "hires_denoising_strength": 0.55,
+  "refiner": false,
+  "batch_size": 20,
+  "total_images": 50,
+  "seed": -1,
+  "prompt": "wet-haired model pressing hand on foggy shower glass, see-through wet blouse, beads of water on glass, soft indoor lighting, misty cinematic atmosphere, highly detailed skin texture, elegant sensuality",
+  "negative_prompt": "nsfw, nude, explicit, cartoon, watermark, blurred background, face obscured, overexposed",
+  "output_dir": "../shower",
+  "category": "shower"
+}

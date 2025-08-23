@@ -1,0 +1,21 @@
+{
+  "model": "realisticVisionV60B1_v51HyperVAE",
+  "lora": "",
+  "width": 512,
+  "height": 768,
+  "steps": 20,
+  "cfg_scale": 7,
+  "sampler_index": "DPM++ 2M",
+  "hires_fix": true,
+  "hires_upscaler": "Latent",
+  "hires_scale": 1.5,
+  "hires_denoising_strength": 0.55,
+  "refiner": false,
+  "batch_size": 20,
+  "total_images": 50,
+  "seed": -1,
+  "prompt": "gorgeous slim woman in sleek modern uniform dress, standing in white corridor, subtle power pose, glossy shoes, minimal background, clean lighting, executive beauty look, editorial fashion portrait",
+  "negative_prompt": "cartoon, blur, bad anatomy, unrealistic, watermark, nsfw, cropped face, distorted",
+  "output_dir": "../uniform",
+  "category": "uniform"
+}

@@ -1,0 +1,21 @@
+{
+  "model": "realisticVisionV60B1_v51HyperVAE",
+  "lora": "",
+  "width": 512,
+  "height": 768,
+  "steps": 20,
+  "cfg_scale": 7,
+  "sampler_index": "DPM++ 2M",
+  "hires_fix": true,
+  "hires_upscaler": "Latent",
+  "hires_scale": 1.5,
+  "hires_denoising_strength": 0.55,
+  "refiner": false,
+  "batch_size": 20,
+  "total_images": 50,
+  "seed": -1,
+  "prompt": "ultra-fit beautiful woman in compression crop top and yoga pants, glowing sweaty skin, gym wall with neon signs, energetic pose, strong core muscles, dynamic backlight, 8k sports editorial look",
+  "negative_prompt": "nudity, cropped limbs, cartoon, watermark, overexposure, blurry, out of frame, distorted body",
+  "output_dir": "../fitness",
+  "category": "fitness"
+}

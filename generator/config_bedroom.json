@@ -1,0 +1,21 @@
+{
+  "model": "realisticVisionV60B1_v51HyperVAE",
+  "lora": "",
+  "width": 512,
+  "height": 768,
+  "steps": 20,
+  "cfg_scale": 7,
+  "sampler_index": "DPM++ 2M",
+  "hires_fix": true,
+  "hires_upscaler": "Latent",
+  "hires_scale": 1.5,
+  "hires_denoising_strength": 0.55,
+  "refiner": false,
+  "batch_size": 20,
+  "total_images": 50,
+  "seed": -1,
+  "prompt": "elegant young woman reclining on bed with silk sheets, soft warm bedside lighting, lace nightgown, polished wooden furniture, serene expression, intimate luxury vibe, cinematic framing, glossy skin",
+  "negative_prompt": "nude, nsfw, blurry, messy background, cartoon, watermark, poorly drawn feet, low contrast",
+  "output_dir": "../bedroom",
+  "category": "bedroom"
+}

@@ -1,0 +1,21 @@
+{
+  "model": "realisticVisionV60B1_v51HyperVAE",
+  "lora": "",
+  "width": 512,
+  "height": 768,
+  "steps": 20,
+  "cfg_scale": 7,
+  "sampler_index": "DPM++ 2M",
+  "hires_fix": true,
+  "hires_upscaler": "Latent",
+  "hires_scale": 1.5,
+  "hires_denoising_strength": 0.55,
+  "refiner": false,
+  "batch_size": 20,
+  "total_images": 50,
+  "seed": -1,
+  "prompt": "charming woman posing confidently in front of large ornate mirror, holding smartphone, elegant hairstyle, vintage bedroom setting, artistic reflection, warm ambient daylight, photorealistic portrait",
+  "negative_prompt": "face cropped, bad symmetry, lowres, cartoon, watermark, nude, messy room",
+  "output_dir": "../mirror",
+  "category": "mirror"
+}
