@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Text Processing Tools - My Tool Collection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="tool-header">
+        <h1 class="tool-title">Text Processing Tools</h1>
+        <a href="/" class="back-link">← Back to Home</a>
+        
+        <div class="user-status">
+            {% if current_user.is_authenticated %}
+                <span class="user-info">Logged in as: {{ current_user.username }}</span>
+                <a href="/logout" class="auth-link">Logout</a>
+                {% if current_user.is_vip %}
+                    <span class="vip-tag">Premium valid until: {{ current_user.vip_expire.strftime('%Y-%m-%d') }}</span>
+                {% else %}
+                    <span class="trial-count">Remaining free uses: {{ current_user.trial_uses }} times</span>
+                    <a href="/vip" class="vip-link">Upgrade to Premium →</a>
+                {% endif %}
+            {% else %}
+                <a href="/login" class="auth-link">Login</a> | <a href="/register" class="auth-link">Sign Up</a>
+                <p class="tip">Login to save usage records</p>
+            {% endif %}
+        </div>
+    </header>
+
+    <main class="tool-container">
+        <section class="category">
+            <p class="category-desc">Supports TXT file processing. The tools below help you quickly organize and analyze text content</p>
+
+            <!-- 1. Text Deduplication -->
+            <div class="tool-card">
+                <h3 class="tool-title">1. Text Deduplication (Remove Duplicate Lines)</h3>
+                <p class="tool-desc">Function: Upload TXT file, automatically remove duplicate lines (retains only the first occurrence)</p>
+                <form method="POST" enctype="multipart/form-data" class="tool-form">
+                    <div class="file-upload">
+                        <label for="file-1" class="file-label">Select File</label>
+                        <input type="file" id="file-1" name="file" accept=".txt" required class="file-input">
+                    </div>
+                    <input type="hidden" name="tool_name" value="remove_duplicate">
+                    <button type="submit" class="tool-btn">Start Deduplication</button>
+                </form>
+            </div>
+
+            <!-- 2. Text Word Count -->
+            <div class="tool-card">
+                <h3 class="tool-title">2. Text Word Count</h3>
+                <p class="tool-desc">Function: Upload TXT file, count total words, characters, lines, and paragraphs</p>
+                <form method="POST" enctype="multipart/form-data" class="tool-form">
+                    <div class="file-upload">
+                        <label for="file-2" class="file-label">Select File</label>
+                        <input type="file" id="file-2" name="file" accept=".txt" required class="file-input">
+                    </div>
+                    <input type="hidden" name="tool_name" value="count_words">
+                    <button type="submit" class="tool-btn">Start Counting</button>
+                </form>
+            </div>
+
+            <!-- 3. Line Break Conversion -->
+            <div class="tool-card">
+                <h3 class="tool-title">3. Line Break Conversion (Windows/Linux)</h3>
+                <p class="tool-desc">Function: Fix cross-system line break garbled issues (Windows uses \r\n, Linux uses \n)</p>
+                <form method="POST" enctype="multipart/form-data" class="tool-form">
+                    <div class="file-upload">
+                        <label for="file-3" class="file-label">Select File</label>
+                        <input type="file" id="file-3" name="file" accept=".txt" required class="file-input">
+                    </div>
+                    <select name="newline_mode" class="form-select">
+                        <option value="linux">Convert to Linux Format (\n)</option>
+                        <option value="windows">Convert to Windows Format (\r\n)</option>
+                    </select>
+                    <input type="hidden" name="tool_name" value="convert_newline">
+                    <button type="submit" class="tool-btn">Start Conversion</button>
+                </form>
+            </div>
+
+            <!-- 4. Text Keyword Extraction -->
+            <div class="tool-card">
+                <h3 class="tool-title">4. Text Keyword Extraction (Top N)</h3>
+                <p class="tool-desc">Function: Extract the most frequently occurring keywords (excludes meaningless words like "the", "is")</p>
+                <form method="POST" enctype="multipart/form-data" class="tool-form">
+                    <div class="file-upload">
+                        <label for="file-4" class="file-label">Select File</label>
+                        <input type="file" id="file-4" name="file" accept=".txt" required class="file-input">
+                    </div>
+                    <input type="number" name="top_n" value="10" min="5" max="50" class="num-input"
+                           title="Number of keywords to extract (5-50)">
+                    <input type="hidden" name="tool_name" value="extract_keywords">
+                    <button type="submit" class="tool-btn">Start Extraction</button>
+                </form>
+            </div>
+
+            <!-- 5. Text Case Conversion -->
+            <div class="tool-card">
+                <h3 class="tool-title">5. Text Case Conversion</h3>
+                <p class="tool-desc">Function: Quickly convert English text format (all lowercase/all uppercase/title case)</p>
+                <form method="POST" enctype="multipart/form-data" class="tool-form">
+                    <div class="file-upload">
+                        <label for="file-5" class="file-label">Select File</label>
+                        <input type="file" id="file-5" name="file" accept=".txt" required class="file-input">
+                    </div>
+                    <select name="case_mode" class="form-select">
+                        <option value="lower">All lowercase (e.g., hello world)</option>
+                        <option value="upper">All uppercase (e.g., HELLO WORLD)</option>
+                        <option value="title">Title case (e.g., Hello World)</option>
+                    </select>
+                    <input type="hidden" name="tool_name" value="convert_case">
+                    <button type="submit" class="tool-btn">Start Conversion</button>
+                </form>
+            </div>
+
+            <!-- 6. Remove Spaces/Empty Lines -->
+            <div class="tool-card">
+                <h3 class="tool-title">6. Remove Spaces/Empty Lines (Format Cleaning)</h3>
+                <p class="tool-desc">Function: Remove extra consecutive spaces (retains single spaces) and empty lines for cleaner text</p>
+                <form method="POST" enctype="multipart/form-data" class="tool-form">
+                    <div class="file-upload">
+                        <label for="file-6" class="file-label">Select File</label>
+                        <input type="file" id="file-6" name="file" accept=".txt" required class="file-input">
+                    </div>
+                    <input type="hidden" name="tool_name" value="clean_spaces">
+                    <button type="submit" class="tool-btn">Start Cleaning</button>
+                </form>
+            </div>
+
+            <!-- 7. Text Batch Replacement -->
+            <div class="tool-card">
+                <h3 class="tool-title">7. Text Batch Replacement (Quick Content Modification)</h3>
+                <p class="tool-desc">Function: Batch replace specified content in text (e.g., typos, name updates)</p>
+                <form method="POST" enctype="multipart/form-data" class="tool-form">
+                    <div class="file-upload">
+                        <label for="file-7" class="file-label">Select File</label>
+                        <input type="file" id="file-7" name="file" accept=".txt" required class="file-input">
+                    </div>
+                    <input type="text" name="old_str" placeholder="Old content to replace" required class="text-input">
+                    <input type="text" name="new_str" placeholder="New replacement content" required class="text-input">
+                    <input type="hidden" name="tool_name" value="batch_replace">
+                    <button type="submit" class="tool-btn">Start Replacement</button>
+                </form>
+            </div>
+
+            <!-- 8. Text Sort by Line -->
+            <div class="tool-card">
+                <h3 class="tool-title">8. Text Sort by Line (List Organization)</h3>
+                <p class="tool-desc">Function: Sort text by line (supports letters/numbers, ascending/descending; ideal for lists/scores)</p>
+                <form method="POST" enctype="multipart/form-data" class="tool-form">
+                    <div class="file-upload">
+                        <label for="file-8" class="file-label">Select File</label>
+                        <input type="file" id="file-8" name="file" accept=".txt" required class="file-input">
+                    </div>
+                    <select name="sort_mode" class="form-select">
+                        <option value="asc">Ascending (small to large/A to Z)</option>
+                        <option value="desc">Descending (large to small/Z to A)</option>
+                    </select>
+                    <label class="form-label">
+                        <input type="checkbox" name="is_number" value="true" class="form-checkbox">
+                        Content is numeric (sort by value)
+                    </label>
+                    <input type="hidden" name="tool_name" value="sort_lines">
+                    <button type="submit" class="tool-btn">Start Sorting</button>
+                </form>
+            </div>
+
+            <!-- 9. Extract Specific Lines -->
+            <div class="tool-card">
+                <h3 class="tool-title">9. Extract Specific Lines (Precise Filtering)</h3>
+                <p class="tool-desc">Function: Extract lines containing keywords, first N lines, or last N lines (ideal for logs/long documents)</p>
+                <form method="POST" enctype="multipart/form-data" class="tool-form">
+                    <div class="file-upload">
+                        <label for="file-9" class="file-label">Select File</label>
+                        <input type="file" id="file-9" name="file" accept=".txt" required class="file-input">
+                    </div>
+                    <select name="extract_mode" id="extract_mode" class="form-select">
+                        <option value="keyword">Lines containing keywords</option>
+                        <option value="first">First N lines</option>
+                        <option value="last">Last N lines</option>
+                    </select>
+                    
+                    <div id="keyword_input" style="margin: 10px 0;" class="form-group">
+                        <input type="text" name="keyword" placeholder="Enter keyword" class="text-input">
+                    </div>
+                    <div id="n_input" style="margin: 10px 0; display: none;" class="form-group">
+                        <input type="number" name="n" value="10" min="1" title="Number of lines to extract" class="num-input">
+                    </div>
+
+                    <input type="hidden" name="tool_name" value="extract_lines">
+                    <button type="submit" class="tool-btn">Start Extraction</button>
+                </form>
+            </div>
+
+            <!-- 10. Separate Chinese/English -->
+            <div class="tool-card">
+                <h3 class="tool-title">10. Separate Chinese/English (Category Processing)</h3>
+                <p class="tool-desc">Function: Split mixed Chinese-English text into pure Chinese and pure English parts (facilitates translation)</p>
+                <form method="POST" enctype="multipart/form-data" class="tool-form">
+                    <div class="file-upload">
+                        <label for="file-10" class="file-label">Select File</label>
+                        <input type="file" id="file-10" name="file" accept=".txt" required class="file-input">
+                    </div>
+                    <input type="hidden" name="tool_name" value="split_cn_en">
+                    <button type="submit" class="tool-btn">Start Separation</button>
+                </form>
+            </div>
+
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for msg in messages %}
+                        <div class="message">{{ msg }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            {% if message %}
+                <div class="message">{{ message }}</div>
+            {% endif %}
+        </section>
+    </main>
+
+    <script>
+        const modeSelect = document.getElementById('extract_mode');
+        const keywordInput = document.getElementById('keyword_input');
+        const nInput = document.getElementById('n_input');
+        
+        modeSelect.addEventListener('change', () => {
+            if (modeSelect.value === 'keyword') {
+                keywordInput.style.display = 'block';
+                nInput.style.display = 'none';
+            } else {
+                keywordInput.style.display = 'none';
+                nInput.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

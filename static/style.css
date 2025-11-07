@@ -1,0 +1,456 @@
+/* 全局变量（科技感橘色调） */
+:root {
+  --primary: #FF7A00; /* 主色调：醒目橘色 */
+  --primary-light: #FFF0E0; /* 浅橘色背景 */
+  --primary-glow: rgba(255, 122, 0, 0.2); /* 橘色发光效果 */
+  --dark: #1A1A2E; /* 科技感深色 */
+  --light: #F9FAFB; /* 浅色背景 */
+  --gray: #6B7280; /* 灰色文字 */
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* 基础阴影 */
+  --shadow-hover: 0 8px 24px var(--primary-glow); /* 悬停发光阴影 */
+}
+
+/* 全局重置 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+}
+
+body {
+  background-color: var(--light);
+  color: var(--dark);
+  line-height: 1.6;
+  background-image: 
+    radial-gradient(var(--primary-glow) 1px, transparent 1px),
+    radial-gradient(var(--primary-glow) 1px, transparent 1px);
+  background-size: 50px 50px;
+  background-position: 0 0, 25px 25px;
+}
+
+/* 头部导航 */
+header {
+  background-color: white;
+  padding: 15px 20px;
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(255, 122, 0, 0.1);
+}
+
+header h1 {
+  color: var(--primary);
+  font-size: 26px;
+  font-weight: 700;
+  display: inline-block;
+  letter-spacing: -0.5px;
+}
+
+header p {
+  color: var(--gray);
+  margin: 5px 0 10px;
+  font-size: 14px;
+}
+
+/* 登录/注册链接 */
+.auth-links {
+  text-align: right;
+  margin-top: -40px;
+}
+
+.auth-links span {
+  color: var(--dark);
+  margin-right: 15px;
+  font-weight: 500;
+}
+
+.auth-links a {
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  margin-left: 8px;
+}
+
+/* 主按钮 */
+.auth-links a:not(.auth-link) {
+  background: linear-gradient(135deg, var(--primary), #FF5700);
+  color: white;
+  box-shadow: 0 2px 4px var(--primary-glow);
+}
+
+.auth-links a:not(.auth-link):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px var(--primary-glow);
+}
+
+/* 次要按钮 */
+.auth-links .auth-link {
+  background-color: transparent;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
+.auth-links .auth-link:hover {
+  background-color: var(--primary-light);
+}
+
+/* 分类卡片区域 */
+.categories {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 25px;
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+/* 工具卡片（首页分类） */
+.category-card {
+  background-color: white;
+  border-radius: 10px;
+  padding: 25px;
+  box-shadow: var(--shadow);
+  border-top: 3px solid var(--primary);
+  transition: all 0.3s ease;
+}
+
+.category-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-hover);
+}
+
+.category-card h2 {
+  color: var(--dark);
+  font-size: 20px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.category-card h2::before {
+  content: "";
+  width: 4px;
+  height: 20px;
+  background-color: var(--primary);
+  border-radius: 2px;
+}
+
+.category-card p {
+  color: var(--gray);
+  font-size: 14px;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.category-card a {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--primary), #FF5700);
+  color: white;
+  padding: 9px 18px;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 14px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px var(--primary-glow);
+}
+
+.category-card a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px var(--primary-glow);
+}
+
+.category-card a.disabled {
+  background: #E5E7EB;
+  color: var(--gray);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.category-card a.disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* 页脚 */
+footer {
+  background-color: var(--dark);
+  color: white;
+  padding: 40px 20px;
+  margin-top: 60px;
+}
+
+footer .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+footer a {
+  color: #E5E7EB;
+  margin: 0 12px;
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.2s;
+}
+
+footer a:hover {
+  color: var(--primary);
+}
+
+footer p {
+  margin-top: 20px;
+  font-size: 13px;
+  color: #9CA3AF;
+}
+
+/* 响应式适配 */
+@media (max-width: 768px) {
+  .categories {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 0 15px;
+  }
+
+  header {
+    padding: 15px;
+  }
+
+  .auth-links {
+    text-align: left;
+    margin-top: 15px;
+  }
+
+  .auth-links a {
+    display: inline-block;
+    margin: 5px 5px 0 0;
+  }
+}
+
+/* 登录页样式 */
+.auth-page {
+  min-height: 60vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background-color: #f9f9f9;
+  background-image: radial-gradient(#ff7a0011 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.auth-box {
+  width: 100%;
+  max-width: 400px;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  border-left: 4px solid #ff7a00;
+}
+
+.auth-title {
+  text-align: center;
+  color: #333;
+  margin-bottom: 25px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  color: #555;
+  font-size: 14px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+.form-input:focus {
+  border-color: #ff7a00;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255,122,0,0.1);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 25px 0;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #ff7a00, #ff5e00);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255,122,0,0.3);
+}
+
+.link-text {
+  color: #666;
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.3s;
+}
+
+.link-text:hover {
+  color: #ff7a00;
+}
+
+.auth-switch {
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+  margin-top: 15px;
+}
+
+.link-primary {
+  color: #ff7a00;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.link-primary:hover {
+  text-decoration: underline;
+}
+
+/* 文件上传按钮 */
+.file-upload {
+  position: relative;
+  margin: 10px 0;
+}
+.file-label {
+  display: inline-block;
+  padding: 8px 16px;
+  background: #f0f0f0;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #333;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  transition: all 0.2s;
+}
+.file-label:hover {
+  background: #e9e9e9;
+}
+.file-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* 文本工具页样式 */
+.tool-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.tool-card {
+  background-color: white;
+  border-radius: 10px;
+  padding: 25px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+  border-left: 4px solid var(--primary);
+  transition: all 0.3s ease;
+}
+
+.tool-card:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+.tool-card .tool-title {
+  color: var(--dark);
+  font-size: 18px;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.tool-card .tool-desc {
+  color: var(--gray);
+  font-size: 14px;
+  margin-bottom: 15px;
+  line-height: 1.5;
+}
+
+.tool-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.text-input, .num-input, .form-select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  width: auto;
+  min-width: 150px;
+}
+
+.text-input:focus, .num-input:focus, .form-select:focus {
+  border-color: var(--primary);
+  outline: none;
+  box-shadow: 0 0 0 3px var(--primary-glow);
+}
+
+.tool-btn {
+  background: linear-gradient(135deg, var(--primary), #FF5700);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px var(--primary-glow);
+}
+
+.tool-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px var(--primary-glow);
+}
+
+.message {
+  padding: 12px;
+  margin: 15px 0;
+  border-radius: 6px;
+  background: #fff3cd;
+  color: #856404;
+  font-size: 14px;
+  border: 1px solid #ffeeba;
+}

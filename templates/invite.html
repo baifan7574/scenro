@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ _('Invite Friends - Tool Collection') }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>{{ _('Invite Friends, Both Get Benefits') }}</h1>
+        <a href="/" class="auth-link">{{ _('← Return to Homepage') }}</a>
+    </header>
+
+    <main class="tool-container">
+        <div class="invite-info">
+            <p>{{ _('Your invitation code:') }}<span class="invite-code">{{ invite_code }}</span></p>
+            <p>{{ _('Invitation rules:') }}</p>
+            <ul>
+                <li>{{ _('When friends register with your invitation code, both parties get 5 free trial times') }}</li>
+                <li>{{ _('Invite 3 friends to register, and you can get a 1-month free VIP upgrade') }}</li>
+            </ul>
+            <p>{{ _('Copy the invitation code to send to friends:') }}</p>
+            <button class="btn" onclick="copyCode()">{{ _('Copy Invitation Code') }}</button>
+        </div>
+    </main>
+
+    <script>
+        function copyCode() {
+            const code = document.querySelector('.invite-code').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('{{ _("Invitation code copied!") }}');
+            });
+        }
+    </script>
+</body>
+</html>

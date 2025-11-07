@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Successful</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>🎉 Payment Successful!</h1>
+        <p>Your VIP membership has been activated, valid until: {{ vip_expire }}</p>
+        <p>Please <a href="/login">log in</a> to use member features</p>
+        <a href="/" class="btn">Return to Homepage</a>
+    </div>
+</body>
+</html>

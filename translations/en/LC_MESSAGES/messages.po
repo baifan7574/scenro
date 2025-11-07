@@ -1,0 +1,147 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+# 首页通用文本
+msgid "我的工具集合 - 首页"
+msgstr "My Tool Collection - Home"
+
+msgid "我的工具集合"
+msgstr "My Tool Collection"
+
+msgid "首页"
+msgstr "Home"
+
+msgid "文本工具"
+msgstr "Text Tools"
+
+msgid "图片工具"
+msgstr "Image Tools"
+
+msgid "PDF工具"
+msgstr "PDF Tools"
+
+msgid "会员中心"
+msgstr "Premium"
+
+msgid "关于我们"
+msgstr "About Us"
+
+msgid "你好，%(name)s！"
+msgstr "Hello, %(name)s!"
+
+msgid "退出登录"
+msgstr "Logout"
+
+msgid "邀请好友"
+msgstr "Invite Friends"
+
+msgid "登录"
+msgstr "Login"
+
+msgid "注册"
+msgstr "Sign Up"
+
+msgid "按分类整理的实用在线工具，操作简单，免费使用"
+msgstr "Practical online tools organized by category, easy to use, free to try"
+
+# 文本工具页
+msgid "文本处理工具 - 我的工具集合"
+msgstr "Text Processing Tools - My Tool Collection"
+
+msgid "支持TXT文件处理，以下工具可帮助你快速整理、分析文本内容"
+msgstr "Supports TXT file processing; tools below help organize and analyze text quickly"
+
+msgid "返回首页"
+msgstr "Back to Home"
+
+msgid "文本去重（去除重复行）"
+msgstr "Text Deduplication (Remove Duplicate Lines)"
+
+msgid "功能：上传TXT文件，自动删除重复的行（仅保留第一次出现的内容）"
+msgstr "Function: Upload TXT file, auto-remove duplicate lines (keep first occurrence only)"
+
+msgid "开始去重"
+msgstr "Start Deduplication"
+
+msgid "文字字数统计"
+msgstr "Word Count"
+
+msgid "功能：上传TXT文件，统计总字数、字符数、行数、段落数"
+msgstr "Function: Upload TXT file, count total words, characters, lines, paragraphs"
+
+msgid "开始统计"
+msgstr "Start Counting"
+
+msgid "换行符转换"
+msgstr "Line Break Conversion"
+
+msgid "功能：将Windows换行符（CRLF）转换为Linux格式（LF），或反之"
+msgstr "Function: Convert Windows line breaks (CRLF) to Linux (LF) or vice versa"
+
+msgid "开始转换"
+msgstr "Start Conversion"
+
+# 其他工具页通用文本
+msgid "即将上线"
+msgstr "Coming Soon"
+
+msgid "包含压缩、格式转换、加水印等工具（即将上线）"
+msgstr "Includes compression, format conversion, watermarking (coming soon)"
+
+msgid "包含PDF转TXT、合并、拆分等工具（即将上线）"
+msgstr "Includes PDF to TXT, merge, split (coming soon)"
+
+# 页脚
+msgid "隐私政策"
+msgstr "Privacy Policy"
+
+msgid "服务条款"
+msgstr "Terms of Service"
+
+msgid "联系我们"
+msgstr "Contact Us"
+
+msgid "专注提升效率的在线工具平台"
+msgstr "Focus on efficient online tool platform"
+
+# 登录/注册页
+msgid "用户登录 - 我的工具集合"
+msgstr "User Login - My Tool Collection"
+
+msgid "用户名"
+msgstr "Username"
+
+msgid "密码"
+msgstr "Password"
+
+msgid "忘记密码？"
+msgstr "Forgot Password?"
+
+msgid "还没有账号？立即注册"
+msgstr "No account? Register now"
+
+msgid "用户注册 - 我的工具集合"
+msgstr "User Registration - My Tool Collection"
+
+msgid "确认密码"
+msgstr "Confirm Password"
+
+msgid "注册成功，立即登录"
+msgstr "Registration successful, login now"
+
+# 会员中心
+msgid "会员中心 - 我的工具集合"
+msgstr "Premium Center - My Tool Collection"
+
+msgid "免费用户：每月10次使用机会"
+msgstr "Free User: 10 uses per month"
+
+msgid "会员用户：无限次使用所有工具，优先体验新功能"
+msgstr "Premium User: Unlimited use of all tools, priority access to new features"
+
+msgid "开通会员"
+msgstr "Get Premium"
+
+msgid "会员有效期至：%(date)s"
+msgstr "Premium valid until: %(date)s"

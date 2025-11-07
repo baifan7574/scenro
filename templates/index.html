@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>My Tool Collection - Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header style="text-align: center; padding: 20px 0; margin-bottom: 30px;">
+        <!-- 标题居中 -->
+        <h1 style="margin: 0 0 20px 0; font-size: 2.5em;">My Tool Collection</h1>
+        
+        <!-- 导航链接居中，Premium文字放大加粗 -->
+        <nav style="font-size: 1.1em; margin-bottom: 15px;">
+            <a href="/" class="active" style="margin: 0 15px; text-decoration: none;">Home</a>
+            <a href="/vip" style="margin: 0 15px; text-decoration: none; font-size: 1.3em; font-weight: bold;">Premium</a>
+        </nav>
+          
+        <div class="auth-links">
+            {% if current_user.is_authenticated %}
+                <span>Hello, {{ current_user.username }}!</span>
+                <a href="/logout" class="auth-link">Logout</a>
+                <a href="/invite" class="btn-invite">Invite Friends</a>
+            {% else %}
+                <a href="/login" class="auth-link">Login</a>
+                <a href="/register">Sign Up</a>
+            {% endif %}
+        </div>
+        <p>Practical online tools organized by category, easy to use, free to try</p>
+    </header>
+
+    <div class="categories">
+        <div class="category-card">
+            <h2>📄 Text Processing Tools</h2>
+            <p>Includes deduplication, word count, line break conversion, supports TXT files</p>
+            <a href="/text-tools">Enter Tools→</a>
+        </div>
+        <div class="category-card">
+            <h2>🖼️ Image Processing Tools</h2>
+            <p>Includes compression, format conversion, watermarking (coming soon)</p>
+            <a href="#" class="disabled">Coming Soon</a>
+        </div>
+        <div class="category-card">
+            <h2>📑 PDF Processing Tools</h2>
+            <p>Includes PDF to TXT, merge, split (coming soon)</p>
+            <a href="#" class="disabled">Coming Soon</a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <a href="/privacy">Privacy Policy</a>
+            <a href="/terms">Terms of Service</a>
+            <a href="/about">About Us</a>
+            <a href="/contact">Contact Us</a>
+            <p>© 2025 My Tool Collection | Focus on efficient online tool platform</p>
+        </div>
+    </footer>
+</body>
+</html>

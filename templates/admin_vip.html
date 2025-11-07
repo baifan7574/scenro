@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 适配手机 -->
+    <title>会员开通管理</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> <!-- 复用现有样式 -->
+    <style>
+        /* 简单样式补充，可合并到 style.css 中 */
+        .admin-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+        .form-group {
+            margin: 15px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background: #dff0d8;
+            color: #3c763d;
+        }
+        .error {
+            background: #f2dede;
+            color: #a94442;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <h2>会员开通管理</h2>
+        <form method="POST" action="/admin/vip"> <!-- 与 app.py 中的路由对应 -->
+            <!-- 管理员密码验证（防止他人访问） -->
+            <div class="form-group">
+                <label>管理员密码</label>
+                <input type="password" name="admin_password" required> <!-- 与 app.py 中获取的字段对应 -->
+            </div>
+            
+            <!-- 用户名（根据支付备注填写） -->
+            <div class="form-group">
+                <label>用户姓名（支付时的备注）</label>
+                <input type="text" name="username" placeholder="例如：张三" required> <!-- 与 app.py 对应 -->
+            </div>
+            
+            <!-- 会员有效期（天数） -->
+            <div class="form-group">
+                <label>开通天数</label>
+                <input type="number" name="days" value="30" min="1"> <!-- 与 app.py 对应 -->
+            </div>
+            
+            <button type="submit">一键开通会员</button>
+        </form>
+
+        <!-- 显示操作结果（与 app.py 中的 flash 对应） -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for msg in messages %}
+                    <div class="message {% if '成功' in msg %}success{% else %}error{% endif %}">
+                        {{ msg }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+</body>
+</html>

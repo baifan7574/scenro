@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Upgrade to Premium - Text Processing Tools</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Upgrade to Premium</h1>
+        <a href="/" class="back-link" style="text-decoration: none; color: var(--primary);">← Back to Home</a>
+        
+        <div class="auth-links">
+            {% if current_user.is_authenticated %}
+                <span>Logged in as: {{ current_user.username }}</span>
+                <a href="/logout" class="auth-link">Logout</a>
+            {% else %}
+                <a href="/login" class="auth-link">Login</a> | <a href="/register">Sign Up</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <main class="tool-container">
+        <section class="category">
+            <div class="tool-card">
+                <h3 class="tool-title">Premium Benefits</h3>
+                <ul style="margin: 15px 0; padding-left: 20px; color: var(--gray);">
+                    <li>Unlimited use of all text processing tools (no daily limits)</li>
+                    <li>Process larger files (up to 10MB, free version: 1MB)</li>
+                    <li>Save processing history for 30 days</li>
+                    <li>Priority technical support</li>
+                    <li>Ad-free experience</li>
+                </ul>
+            </div>
+
+            <div class="tool-card">
+                <h3 class="tool-title">Pricing Plans</h3>
+                <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                    <!-- 月付方案 -->
+                    <div style="flex: 1; min-width: 250px; border: 1px solid #eee; border-radius: 8px; padding: 20px;">
+                        <h4 style="color: var(--dark); margin-bottom: 10px;">Monthly</h4>
+                        <p style="font-size: 24px; font-weight: bold; color: var(--primary);">$4.99/month</p>
+                        <a href="/pay/paypal/month" class="tool-btn" style="margin-top: 15px; display: inline-block;">Choose Monthly</a>
+                    </div>
+
+                    <!-- 年付方案 -->
+                    <div style="flex: 1; min-width: 250px; border: 1px solid var(--primary); border-radius: 8px; padding: 20px; background: var(--primary-light);">
+                        <h4 style="color: var(--dark); margin-bottom: 10px;">Annual (Best Value)</h4>
+                        <p style="font-size: 24px; font-weight: bold; color: var(--primary);">$47.88/year</p>
+                        <p style="color: #555; font-size: 14px;">Save 20% compared to monthly</p>
+                        <a href="/pay/paypal/annual" class="tool-btn" style="margin-top: 15px; display: inline-block;">Choose Annual</a>
+                    </div>
+
+                    <!-- 新增：终身会员方案 -->
+                    <div style="flex: 1; min-width: 250px; border: 1px solid #ff6b35; border-radius: 8px; padding: 20px; background: #fff5f0;">
+                        <h4 style="color: #ff6b35; margin-bottom: 10px;">Lifetime (Forever)</h4>
+                        <p style="font-size: 24px; font-weight: bold; color: #ff6b35;">$199.00<span style="font-size: 16px;"> once</span></p>
+                        <p style="color: #555; font-size: 14px;">Permanent access, no renewal</p>
+                        <a href="/pay/paypal/lifetime" class="tool-btn" style="margin-top: 15px; display: inline-block; background: #ff6b35; border-color: #ff6b35;">Choose Lifetime</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <a href="/about">About Us</a>
+            <a href="/terms">Terms</a>
+            <a href="/privacy">Privacy</a>
+            <p>© 2025 Text Processing Tools</p>
+        </div>
+    </footer>
+</body>
+</html>

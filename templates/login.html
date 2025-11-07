@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>User Login - My Tool Collection</title>
+    <!-- 确保CSS路径正确 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- 头部导航（和首页样式统一） -->
+    <header class="main-header">
+        <h1 class="site-title">My Tool Collection</h1>
+        <nav class="main-nav">
+            <a href="/" class="nav-item">Home</a>
+            <a href="/text-tools" class="nav-item">Text Tools</a>
+            <a href="/vip" class="nav-item">Premium</a>
+            <a href="/about" class="nav-item">About Us</a>
+        </nav>
+    </header>
+
+    <!-- 登录表单容器（居中布局） -->
+    <div class="auth-page">
+        <div class="auth-box"> <!-- 白色卡片容器 -->
+            <h2 class="auth-title">User Login</h2>
+            <form method="post" class="auth-form">
+                <div class="form-group">
+                    <label class="form-label" for="username">Username</label>
+                    <input type="text" id="username" name="username" required class="form-input">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input type="password" id="password" name="password" required class="form-input">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Login</button>
+                    <a href="/forgot-password" class="link-text">Forgot Password?</a>
+                </div>
+            </form>
+            <p class="auth-switch">Don't have an account? <a href="/register" class="link-primary">Sign Up Now</a></p>
+        </div>
+    </div>
+
+    <!-- 页脚（和首页统一） -->
+    <footer class="main-footer">
+        <div class="footer-container">
+            <a href="/privacy" class="footer-link">Privacy Policy</a>
+            <a href="/terms" class="footer-link">Terms of Service</a>
+            <a href="/about" class="footer-link">About Us</a>
+            <p class="copyright">© 2025 My Tool Collection</p>
+        </div>
+    </footer>
+</body>
+</html>
