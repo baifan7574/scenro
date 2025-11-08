@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, make_response, send_file
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.dialects import postgresql
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_babel import Babel, gettext as _
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -20,11 +21,22 @@ PAYPAL_CONFIG = {
 }
 paypalrestsdk.configure(PAYPAL_CONFIG)  # 初始化PayPal SDK
 # 配置数据库（数据存在site.db文件里）
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:100100@localhost:3306/tool_website?charset=utf8mb4'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://baifan7574:IJJDniMHTMaLProNANQaIp8uGU9qT0nn@dpg-d471vq7diees73dgdd90-a/tools_8956'
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # 关闭不必要的警告
+print("实际使用的数据库连接字符串：", app.config['SQLALCHEMY_DATABASE_URI'])
+
+app.config['SQLALCHEMY_DIALECT'] = postgresql.dialect
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+    'dialect': 'postgresql+psycopg2',  # 强制用PostgreSQL的psycopg2驱动
+    'pool_pre_ping': True  # 可选，增强连接稳定性
+}
+
 # 配置多语言
 app.config['LANGUAGES'] = {'zh': '中文', 'en': 'English'}
 # 初始化数据库
+print("当前生效的数据库连接字符串：", app.config['SQLALCHEMY_DATABASE_URI'])
+
 db = SQLAlchemy(app)
 # 初始化登录管理
 login_manager = LoginManager(app)
@@ -576,10 +588,10 @@ def pay_callback():
 
 
 # 初始化数据库
-with app.app_context():
-    print("开始创建表结构...")  # 新增日志
-    db.create_all()
-    print("表结构创建完成！")  # 新增日志
+#with app.app_context():
+    #print("开始创建表结构...")  # 新增日志
+    #db.create_all()
+    #print("表结构创建完成！")  # 新增日志
 
 
 if __name__ == '__main__':
