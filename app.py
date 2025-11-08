@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, make_response, send_file
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.dialects import postgresql
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_babel import Babel, gettext as _
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -11,7 +10,7 @@ from functools import wraps
 import paypalrestsdk
 
 # 初始化Flask应用
-app = Flask(__name__,instance_relative_config=False)
+app = Flask(__name__, instance_relative_config=False)
 # 配置：加密密钥（替换成你自己的随机字符串）
 app.config['SECRET_KEY'] = 'dfgadgdf!!j5273424'
 PAYPAL_CONFIG = {
@@ -20,28 +19,27 @@ PAYPAL_CONFIG = {
     "client_secret": "EPd2i8uKqeESK_JHW0tNmHcLWVDd5hOixS7d84VJwnWPeXqep4A5VPSbk4AdXWLqOp5rwavklpZpvdas"   # 替换成你的Secret
 }
 paypalrestsdk.configure(PAYPAL_CONFIG)  # 初始化PayPal SDK
-# 配置数据库（数据存在site.db文件里）
+
+# 配置数据库（PostgreSQL连接字符串）
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://baifan7574:IJJDniMHTMaLProNANQaIp8uGU9qT0nn@dpg-d471vq7diees73dgdd90-a/tools_8956'
-
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # 关闭不必要的警告
-print("实际使用的数据库连接字符串：", app.config['SQLALCHEMY_DATABASE_URI'])
 
-app.config['SQLALCHEMY_DIALECT'] = postgresql.dialect
+# 修复：移除错误的引擎配置参数（dialect和drivername由连接字符串自动识别）
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
-    'dialect': 'postgresql',
-    'drivername': 'psycopg2',  # PostgreSQL的官方驱动
-    'pool_pre_ping': True      # 可选：增强连接稳定性
+    'pool_pre_ping': True  # 仅保留连接检查，确保连接有效性
 }
+
 # 配置多语言
 app.config['LANGUAGES'] = {'zh': '中文', 'en': 'English'}
-# 初始化数据库
-print("当前生效的数据库连接字符串：", app.config['SQLALCHEMY_DATABASE_URI'])
+# 打印连接字符串（验证是否正确）
+print("实际使用的数据库连接字符串：", app.config['SQLALCHEMY_DATABASE_URI'])
 
+# 初始化数据库
 db = SQLAlchemy(app)
 # 初始化登录管理
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
-# 初始化多语言（兼容所有版本的写法）
+# 初始化多语言
 babel = Babel(app)
 
 # 全局变量：记录IP访问次数（防刷）
@@ -50,15 +48,15 @@ ip_access_counts = {}
 
 # 1. 数据库模型
 class User(UserMixin, db.Model):
-    __tablename__ = 'users'  # 显式指定表名，避免复数转换不一致
+    __tablename__ = 'users'  # 显式指定表名
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
-    password_hash = db.Column(db.String(256), nullable=False)  # 加长字段以容纳哈希值
+    password_hash = db.Column(db.String(256), nullable=False)  # 哈希密码字段
     is_vip = db.Column(db.Boolean, default=False)
     vip_expire = db.Column(db.DateTime)
     trial_uses = db.Column(db.Integer, default=10)
     invite_code = db.Column(db.String(20), unique=True)
-    inviter_id = db.Column(db.Integer, db.ForeignKey('users.id'))  # 外键关联正确表名（users）
+    inviter_id = db.Column(db.Integer, db.ForeignKey('users.id'))  # 外键关联users表
     
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -75,8 +73,8 @@ class User(UserMixin, db.Model):
 
 class Payment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)  # 修复：外键指向users.id
-    plan = db.Column(db.String(20))  # month/year
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    plan = db.Column(db.String(20))  # month/year/lifetime
     amount = db.Column(db.Float)
     pay_time = db.Column(db.DateTime, default=datetime.utcnow)
     is_success = db.Column(db.Boolean, default=False)
@@ -84,7 +82,7 @@ class Payment(db.Model):
 
 class History(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)  # 修复：外键指向users.id
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     tool_name = db.Column(db.String(50))
     file_name = db.Column(db.String(100))
     handle_time = db.Column(db.DateTime, default=datetime.utcnow)
@@ -92,7 +90,7 @@ class History(db.Model):
 
 class UploadHistory(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)  # 修复：外键指向users.id
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     file_name = db.Column(db.String(100))
     file_size = db.Column(db.Integer)  # 字节
     upload_time = db.Column(db.DateTime, default=datetime.utcnow)
@@ -103,12 +101,12 @@ class UploadHistory(db.Model):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# 兼容写法：用 babel 对象的 locale_selector 方法注册
+# 多语言配置
 def get_locale():
     return request.cookies.get('lang', 'zh')
 babel.locale_selector_func = get_locale
 
-# 试用次数检查（所有工具通用）
+# 试用次数检查
 def check_trial_usage():
     if not current_user.is_authenticated:
         return _("请先登录才能使用工具！")
@@ -149,7 +147,7 @@ def text_tools():
         if error_msg:
             return render_template('text_tools.html', message=error_msg)
         
-        # 检查文件大小
+        # 检查文件
         uploaded_file = request.files.get('file')
         if not uploaded_file or uploaded_file.filename == '':
             return render_template('text_tools.html', message=_("请先上传TXT文件！"))
@@ -258,8 +256,8 @@ def text_tools():
         except Exception as e:
             return render_template('text_tools.html', message=f"{_('处理失败')}：{str(e)}")
     
-    # GET请求：显示工具页（带新手引导）
     return render_template('text_tools.html')
+
 
 @app.route('/register', methods=['GET', 'POST'])
 @limit_ip(limit=10)
@@ -267,46 +265,46 @@ def register():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
-        inviter_code = request.form.get('inviter_code', '')  # 新增邀请码输入
-        print(f"[注册调试] 收到表单：用户名={username}，密码={password},邀请码={inviter_code}")  # 日志1
-       
+        inviter_code = request.form.get('inviter_code', '')
+        print(f"[注册调试] 收到表单：用户名={username}，邀请码={inviter_code}")
         
-        # 1. 检查用户名是否重复
+        # 检查用户名重复
         existing_user = User.query.filter_by(username=username).first()
-        print(f"[注册调试] 用户名是否重复：{existing_user is not None}")  # 日志2
         if existing_user:
             flash(_('用户名已被注册，请换一个'))
             return redirect('/register')
         
-        # 2. 创建新用户并加密密码
+        # 创建新用户
         new_user = User(username=username)
-        new_user.set_password(password) 
-        new_user.generate_invite_code()  # 补充：生成邀请码（之前漏掉了） # 必须调用此方法！
-        print(f"[注册调试] 新用户创建成功：{new_user.username}，邀请码={new_user.invite_code}")  # 日志3
+        new_user.set_password(password)
+        new_user.generate_invite_code()  # 生成邀请码
+        print(f"[注册调试] 新用户创建：{new_user.username}，邀请码={new_user.invite_code}")
+        
+        # 处理邀请码
         if inviter_code:
             inviter = User.query.filter_by(invite_code=inviter_code).first()
             if inviter:
-                new_user.inviter_id = inviter.id  # 现在new_user已存在，不会报错
+                new_user.inviter_id = inviter.id
                 inviter.trial_uses += 5
                 flash(_('通过邀请码注册成功，邀请者获得5次试用奖励'))
         
-        # 3. 强制写入数据库（这两行是核心！）
+        # 提交到数据库
         db.session.add(new_user)
-        print("[注册调试] 已执行 db.session.add(new_user)")  # 日志4
         try:
             db.session.commit()
-            print("[注册调试] 已执行 db.session.commit()，数据写入成功！")  # 日志5
+            print("[注册调试] 数据库提交成功")
             flash(_('注册成功，请登录'))
             return redirect('/login')
         except Exception as e:
-            print(f"[注册调试] 数据库提交失败：{str(e)}")  # 关键错误日志
-            flash(_('注册失败，请检查数据库权限或联系管理员'))
+            db.session.rollback()  # 出错时回滚
+            print(f"[注册调试] 数据库提交失败：{str(e)}")
+            flash(_('注册失败：数据库错误，请稍后再试'))
             return redirect('/register')
     return render_template('register.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])
-@limit_ip(limit=50)  # 同一IP最多登录5次
+@limit_ip(limit=50)
 def login():
     if request.method == 'POST':
         username = request.form.get('username')
@@ -330,7 +328,9 @@ def logout():
 @app.route('/vip')
 def vip():
     return render_template('vip.html')
-# 月度会员支付（$4.99/月）
+
+
+# 支付相关路由（保持不变）
 @app.route('/pay/paypal/month')
 @login_required
 def paypal_pay_month():
@@ -338,22 +338,22 @@ def paypal_pay_month():
         "intent": "sale",
         "payer": {"payment_method": "paypal"},
         "redirect_urls": {
-            "return_url": url_for('paypal_success_month', _external=True),  # 回调路由
+            "return_url": url_for('paypal_success_month', _external=True),
             "cancel_url": url_for('vip', _external=True)
         },
         "transactions": [{
-            "amount": {"total": "4.99", "currency": "USD"},  # 月度价格
+            "amount": {"total": "4.99", "currency": "USD"},
             "description": f"Monthly VIP: User ID={current_user.id}"
         }]
     })
-
     if payment.create():
         for link in payment.links:
             if link.rel == "approval_url":
                 return redirect(link.href)
     flash(_('月度支付链接创建失败，请稍后再试'))
     return redirect('/vip')
-# 年度会员支付（$47.88/年）
+
+
 @app.route('/pay/paypal/annual')
 @login_required
 def paypal_pay_annual():
@@ -365,11 +365,10 @@ def paypal_pay_annual():
             "cancel_url": url_for('vip', _external=True)
         },
         "transactions": [{
-            "amount": {"total": "47.88", "currency": "USD"},  # 年度价格
+            "amount": {"total": "47.88", "currency": "USD"},
             "description": f"Annual VIP: User ID={current_user.id}"
         }]
     })
-
     if payment.create():
         for link in payment.links:
             if link.rel == "approval_url":
@@ -377,7 +376,7 @@ def paypal_pay_annual():
     flash(_('年度支付链接创建失败，请稍后再试'))
     return redirect('/vip')
 
-# 终身会员支付（$199.00/终身）
+
 @app.route('/pay/paypal/lifetime')
 @login_required
 def paypal_pay_lifetime():
@@ -389,11 +388,10 @@ def paypal_pay_lifetime():
             "cancel_url": url_for('vip', _external=True)
         },
         "transactions": [{
-            "amount": {"total": "199.00", "currency": "USD"},  # 终身价格
+            "amount": {"total": "199.00", "currency": "USD"},
             "description": f"Lifetime VIP: User ID={current_user.id}"
         }]
     })
-
     if payment.create():
         for link in payment.links:
             if link.rel == "approval_url":
@@ -401,8 +399,7 @@ def paypal_pay_lifetime():
     flash(_('终身支付链接创建失败，请稍后再试'))
     return redirect('/vip')
 
-# PayPal支付成功回调（自动开通会员）
-# 月度会员支付成功回调
+
 @app.route('/pay/success/month')
 def paypal_success_month():
     payment_id = request.args.get('paymentId')
@@ -410,7 +407,6 @@ def paypal_success_month():
     if not payment_id or not payer_id:
         flash(_('支付信息不完整，请重新支付'))
         return redirect('/vip')
-
     payment = paypalrestsdk.Payment.find(payment_id)
     description = payment.transactions[0].description
     try:
@@ -419,26 +415,18 @@ def paypal_success_month():
     except:
         flash(_('支付信息解析失败，请联系管理员'))
         return redirect('/vip')
-
     if user and payment.execute({"payer_id": payer_id}):
         user.is_vip = True
-        user.vip_expire = datetime.utcnow() + timedelta(days=30)  # 30天有效期
-        new_payment = Payment(
-            user_id=user.id,
-            plan="month",
-            amount=4.99,
-            is_success=True
-        )
+        user.vip_expire = datetime.utcnow() + timedelta(days=30)
+        new_payment = Payment(user_id=user.id, plan="month", amount=4.99, is_success=True)
         db.session.add(new_payment)
         db.session.commit()
-        return redirect(url_for('success', 
-                              vip_expire=user.vip_expire.strftime('%Y-%m-%d'),
-                              plan="月度会员"))
+        return redirect(url_for('success', vip_expire=user.vip_expire.strftime('%Y-%m-%d'), plan="月度会员"))
     else:
         flash(_('支付验证失败，请联系管理员'))
         return redirect('/vip')
 
-# 年度会员支付成功回调
+
 @app.route('/pay/success/annual')
 def paypal_success_annual():
     payment_id = request.args.get('paymentId')
@@ -446,7 +434,6 @@ def paypal_success_annual():
     if not payment_id or not payer_id:
         flash(_('支付信息不完整，请重新支付'))
         return redirect('/vip')
-
     payment = paypalrestsdk.Payment.find(payment_id)
     description = payment.transactions[0].description
     try:
@@ -455,26 +442,18 @@ def paypal_success_annual():
     except:
         flash(_('支付信息解析失败，请联系管理员'))
         return redirect('/vip')
-
     if user and payment.execute({"payer_id": payer_id}):
         user.is_vip = True
-        user.vip_expire = datetime.utcnow() + timedelta(days=365)  # 365天有效期
-        new_payment = Payment(
-            user_id=user.id,
-            plan="annual",
-            amount=47.88,
-            is_success=True
-        )
+        user.vip_expire = datetime.utcnow() + timedelta(days=365)
+        new_payment = Payment(user_id=user.id, plan="annual", amount=47.88, is_success=True)
         db.session.add(new_payment)
         db.session.commit()
-        return redirect(url_for('success', 
-                              vip_expire=user.vip_expire.strftime('%Y-%m-%d'),
-                              plan="年度会员"))
+        return redirect(url_for('success', vip_expire=user.vip_expire.strftime('%Y-%m-%d'), plan="年度会员"))
     else:
         flash(_('支付验证失败，请联系管理员'))
         return redirect('/vip')
 
-# 终身会员支付成功回调
+
 @app.route('/pay/success/lifetime')
 def paypal_success_lifetime():
     payment_id = request.args.get('paymentId')
@@ -482,7 +461,6 @@ def paypal_success_lifetime():
     if not payment_id or not payer_id:
         flash(_('支付信息不完整，请重新支付'))
         return redirect('/vip')
-
     payment = paypalrestsdk.Payment.find(payment_id)
     description = payment.transactions[0].description
     try:
@@ -491,33 +469,23 @@ def paypal_success_lifetime():
     except:
         flash(_('支付信息解析失败，请联系管理员'))
         return redirect('/vip')
-
     if user and payment.execute({"payer_id": payer_id}):
         user.is_vip = True
-        user.vip_expire = datetime.utcnow() + timedelta(days=9999)  # 终身有效期
-        new_payment = Payment(
-            user_id=user.id,
-            plan="lifetime",
-            amount=199.00,
-            is_success=True
-        )
+        user.vip_expire = datetime.utcnow() + timedelta(days=9999)
+        new_payment = Payment(user_id=user.id, plan="lifetime", amount=199.00, is_success=True)
         db.session.add(new_payment)
         db.session.commit()
-        return redirect(url_for('success', 
-                              vip_expire=user.vip_expire.strftime('%Y-%m-%d'),
-                              plan="终身会员"))
+        return redirect(url_for('success', vip_expire=user.vip_expire.strftime('%Y-%m-%d'), plan="终身会员"))
     else:
         flash(_('支付验证失败，请联系管理员'))
         return redirect('/vip')
 
 
-# ------------------- 在这里添加第3步的success路由 -------------------
 @app.route('/success')
 def success():
     vip_expire = request.args.get('vip_expire', '未知')
-    plan = request.args.get('plan', '会员')  # 接收会员类型
+    plan = request.args.get('plan', '会员')
     return render_template('success.html', vip_expire=vip_expire, plan=plan)
-# -------------------------------------------------------------------
 
 
 @app.route('/history')
@@ -529,19 +497,16 @@ def history():
     return render_template('history.html', histories=histories)
 
 
-# ------------------- 修改后的代码开始 -------------------
 @app.route('/invite')
 @login_required
 def invite():
-    # 查询当前用户邀请的所有用户（通过inviter_id关联）
     invited_users = User.query.filter_by(inviter_id=current_user.id).all()
-    # 传递邀请码和邀请人数到模板
     return render_template(
         'invite.html', 
         invite_code=current_user.invite_code,
-        invited_count=len(invited_users)  # 邀请成功的人数
+        invited_count=len(invited_users)
     )
-# ------------------- 修改后的代码结束 -------------------
+
 
 @app.route('/set-lang')
 def set_lang():
@@ -549,27 +514,28 @@ def set_lang():
     response = make_response(redirect(request.referrer or '/'))
     response.set_cookie('lang', lang, max_age=30*24*3600)
     return response
-# 底部4个页面的路由（添加到app.py中）
+
+
+# 底部页面路由
 @app.route('/privacy')
 def privacy():
-    return render_template('privacy.html')  # 对应隐私政策页面
+    return render_template('privacy.html')
 
 @app.route('/terms')
 def terms():
-    return render_template('terms.html')    # 对应服务条款页面
+    return render_template('terms.html')
 
 @app.route('/about')
 def about():
-    return render_template('about.html')    # 对应关于我们页面
+    return render_template('about.html')
 
 @app.route('/contact')
 def contact():
-    return render_template('contact.html')  # 对应联系我们页面
+    return render_template('contact.html')
 
 
 @app.route('/pay/callback', methods=['POST'])
 def pay_callback():
-    # 替换为你的支付平台回调逻辑（示例）
     data = request.json
     if data.get('status') == 'success':
         user_id = data.get('user_id')
@@ -587,11 +553,11 @@ def pay_callback():
     return "fail"
 
 
-# 初始化数据库
-#with app.app_context():
-    #print("开始创建表结构...")  # 新增日志
-    #db.create_all()
-    #print("表结构创建完成！")  # 新增日志
+# 关键修复：启用表结构创建逻辑（应用启动时自动创建所有表）
+with app.app_context():
+    print("开始创建表结构...")
+    db.create_all()  # 自动创建所有模型对应的表
+    print("表结构创建完成！")
 
 
 if __name__ == '__main__':
