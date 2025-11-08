@@ -28,10 +28,10 @@ print("实际使用的数据库连接字符串：", app.config['SQLALCHEMY_DATAB
 
 app.config['SQLALCHEMY_DIALECT'] = postgresql.dialect
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
-    'dialect': 'postgresql+psycopg2',  # 强制用PostgreSQL的psycopg2驱动
-    'pool_pre_ping': True  # 可选，增强连接稳定性
+    'dialect': 'postgresql',
+    'drivername': 'psycopg2',  # PostgreSQL的官方驱动
+    'pool_pre_ping': True      # 可选：增强连接稳定性
 }
-
 # 配置多语言
 app.config['LANGUAGES'] = {'zh': '中文', 'en': 'English'}
 # 初始化数据库
