@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, make_response, send_file
+from flask import Flask, render_template, request, redirect, url_for, flash, make_response, send_file, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_babel import Babel, gettext as _
@@ -551,6 +551,48 @@ def pay_callback():
             db.session.commit()
             return "success"
     return "fail"
+
+
+# 新增：管理员查看用户数据接口（仅登录用户可访问）
+@app.route('/admin/users')
+@login_required
+def admin_users():
+    # 查询所有用户（排除密码哈希等敏感信息）
+    users = User.query.all()
+    user_list = []
+    for user in users:
+        user_list.append({
+            "id": user.id,
+            "username": user.username,
+            "is_vip": user.is_vip,
+            "vip_expire": user.vip_expire.strftime('%Y-%m-%d') if user.vip_expire else "未开通",
+            "trial_uses": user.trial_uses,
+            "invite_code": user.invite_code
+        })
+    return jsonify(user_list)  # 返回JSON格式数据
+
+
+# 新增：管理员查看支付记录接口（仅登录用户可访问）
+@app.route('/admin/payments')
+@login_required
+def admin_payments():
+    # 查询所有支付记录
+    payments = Payment.query.all()
+    payment_list = []
+    for pay in payments:
+        # 获取对应的用户名
+        user = User.query.get(pay.user_id)
+        username = user.username if user else "未知用户"
+        payment_list.append({
+            "id": pay.id,
+            "user_id": pay.user_id,
+            "username": username,
+            "plan": pay.plan,
+            "amount": pay.amount,
+            "pay_time": pay.pay_time.strftime('%Y-%m-%d %H:%M:%S'),
+            "is_success": pay.is_success
+        })
+    return jsonify(payment_list)  # 返回JSON格式数据
 
 
 # 关键修复：启用表结构创建逻辑（应用启动时自动创建所有表）
