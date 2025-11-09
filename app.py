@@ -557,9 +557,15 @@ def pay_callback():
 @app.route('/admin')
 @login_required
 def admin_dashboard():
+    # 只有你的账号才能访问（替换成你自己的用户名，比如'baifan7574'）
+    if current_user.username != 'baifan7574':
+        flash('您没有管理员权限！')
+        return redirect('/')  # 无权限则跳转到首页
+    
     # 同时查询用户和支付数据
     users = User.query.all()
     payments = Payment.query.all()
+    
     
     # 处理用户数据（整理成模板可用的格式）
     user_list = []
