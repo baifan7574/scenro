@@ -553,34 +553,29 @@ def pay_callback():
     return "fail"
 
 
-# 新增：管理员查看用户数据接口（仅登录用户可访问）
-@app.route('/admin/users')
+# 新增：管理员总览页面（合并用户和支付数据）
+@app.route('/admin')
 @login_required
-def admin_users():
-    # 查询所有用户（排除密码哈希等敏感信息）
+def admin_dashboard():
+    # 同时查询用户和支付数据
     users = User.query.all()
+    payments = Payment.query.all()
+    
+    # 处理用户数据（整理成模板可用的格式）
     user_list = []
     for user in users:
         user_list.append({
             "id": user.id,
             "username": user.username,
-            "is_vip": user.is_vip,
+            "is_vip": "是" if user.is_vip else "否",
             "vip_expire": user.vip_expire.strftime('%Y-%m-%d') if user.vip_expire else "未开通",
             "trial_uses": user.trial_uses,
             "invite_code": user.invite_code
         })
-    return jsonify(user_list)  # 返回JSON格式数据
-
-
-# 新增：管理员查看支付记录接口（仅登录用户可访问）
-@app.route('/admin/payments')
-@login_required
-def admin_payments():
-    # 查询所有支付记录
-    payments = Payment.query.all()
+    
+    # 处理支付数据（关联用户名）
     payment_list = []
     for pay in payments:
-        # 获取对应的用户名
         user = User.query.get(pay.user_id)
         username = user.username if user else "未知用户"
         payment_list.append({
@@ -588,12 +583,15 @@ def admin_payments():
             "user_id": pay.user_id,
             "username": username,
             "plan": pay.plan,
-            "amount": pay.amount,
-            "pay_time": pay.pay_time.strftime('%Y-%m-%d %H:%M:%S'),
-            "is_success": pay.is_success
+            "amount": f"${pay.amount}",
+            "pay_time": pay.pay_time.strftime('%Y-%m-%d %H:%M'),
+            "is_success": "成功" if pay.is_success else "失败"
         })
-    return jsonify(payment_list)  # 返回JSON格式数据
-
+    
+    # 渲染到HTML模板
+    return render_template('admin_dashboard.html', 
+                         users=user_list, 
+                         payments=payment_list)
 
 # 关键修复：启用表结构创建逻辑（应用启动时自动创建所有表）
 with app.app_context():
